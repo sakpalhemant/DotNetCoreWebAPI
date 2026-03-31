@@ -1,8 +1,4 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
+# ASP.NET Cor
 trigger:
 - master
 
@@ -16,6 +12,19 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
+
+- task: AdvancedSecurity-Codeql-Init@1
+  inputs:
+    enableAutomaticCodeQLInstall: true
+    languages: 'csharp'
+    querysuite: 'code-scanning'
+    buildtype: 'None'
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+- task: AdvancedSecurity-Codeql-Analyze@1
+  inputs:
+    gitHubConnection: 'sakpalhemant'
 - task: Docker@2
   inputs:
     containerRegistry: 'docker'
