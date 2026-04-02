@@ -37,6 +37,10 @@ steps:
 - task: AdvancedSecurity-Codeql-Analyze@1
   displayName: Perform CodeQL Analysis
 
+- task: AdvancedSecurity-Publish@1
+  inputs:
+    SarifsInputDirectory: '$(Build.ArtifactStagingDirectory)/.gdn/'
+
 - task: Docker@2
   inputs:
     containerRegistry: 'docker'
