@@ -13,18 +13,30 @@ steps:
   displayName: 'dotnet build $(buildConfiguration)'
 
 
+# - task: AdvancedSecurity-Codeql-Init@1
+#   inputs:
+#     enableAutomaticCodeQLInstall: true
+#     languages: 'csharp'
+#     querysuite: 'code-scanning'
+#     buildtype: 'None'
+# # Build and test ASP.NET Core projects targeting .NET Core.
+# # Add steps that run tests, create a NuGet package, deploy, and more:
+# # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+# - task: AdvancedSecurity-Codeql-Analyze@1
+#   inputs:
+#     gitHubConnection: 'sakpalhemant'
+
 - task: AdvancedSecurity-Codeql-Init@1
+  displayName: Initialize CodeQL
   inputs:
-    enableAutomaticCodeQLInstall: true
+# build mode `none` is supported for C# but build mode `none` is NOT supported for Swift
+# so this pipeline definition will result in a failed run
     languages: 'csharp'
-    querysuite: 'code-scanning'
-    buildtype: 'None'
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+    buildtype: 'none'
+
 - task: AdvancedSecurity-Codeql-Analyze@1
-  inputs:
-    gitHubConnection: 'sakpalhemant'
+  displayName: Perform CodeQL Analysis
+
 - task: Docker@2
   inputs:
     containerRegistry: 'docker'
