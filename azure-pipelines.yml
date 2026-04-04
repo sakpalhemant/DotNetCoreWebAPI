@@ -59,8 +59,43 @@ steps:
 #   inputs:
 #     SarifsInputDirectory: '$(Build.SolutionDirectory)/.gdn/'
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'myWebAPI'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: '**/$(BuildConfiguration)/**/?(*.exe|*.dll|*.pdb)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: drop1
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     pathToPublish: '$(Build.ArtifactStagingDirectory)'
+#     artifactName: drop2
 
 
+# - task: DownloadBuildArtifacts@1
+#   displayName: 'Download Build Artifacts'
+#   inputs:
+#     buildType: specific                        # Options: 'current' | 'specific'. Specify which build artifacts will be downloaded: `current` or from a specific build
+#     project: 'xxxxxxxxxx-xxxx-xxxx-xxxxxxxxxxx'    # Required when buildType == specific. Project ID.
+#     pipeline: 20                                   # Required when buildType == specific. Build pipeline.
+#     buildVersionToDownload: specific    # Options: 'latest' | 'latestFromBranch' | 'specific'. Required when buildType == specific. Build version to download.
+#     buildId: 128                        # Required when buildType == specific && buildVersionToDownload == specific. Build ID.
+#     artifactName: drop                  # The name of the artifact that will be downloaded.
+#     extractTars: false                  # boolean. Extract all files that are stored inside tar archives.
 
 - task: Docker@2
   inputs:
