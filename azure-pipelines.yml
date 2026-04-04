@@ -9,10 +9,28 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- checkout: self
+  fetchDepth: 0
+
+- task: SonarCloudPrepare@4
+  inputs:
+    SonarQube: 'sonarcloud'
+    organization: 'devops-anil-1'
+    scannerMode: 'dotnet'
+    projectKey: 'devops-anil_Dotnetcorewebapi'
+    projectName: 'Dotnetcorewebapi'
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
+- task: SonarCloudAnalyze@4
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
 
+
+- task: SonarCloudPublish@4
+  inputs:
+    pollingTimeoutSec: '600'
 # - task: AdvancedSecurity-Codeql-Init@1
 #   inputs:
 #     enableAutomaticCodeQLInstall: true
@@ -26,20 +44,23 @@ steps:
 #   inputs:
 #     gitHubConnection: 'sakpalhemant'
 
-- task: AdvancedSecurity-Codeql-Init@1
-  displayName: Initialize CodeQL
-  inputs:
-# build mode `none` is supported for C# but build mode `none` is NOT supported for Swift
-# so this pipeline definition will result in a failed run
-    languages: 'csharp'
-    buildtype: 'none'
+# - task: AdvancedSecurity-Codeql-Init@1
+#   displayName: Initialize CodeQL
+#   inputs:
+# # build mode `none` is supported for C# but build mode `none` is NOT supported for Swift
+# # so this pipeline definition will result in a failed run
+#     languages: 'csharp'
+#     buildtype: 'none'
 
-- task: AdvancedSecurity-Codeql-Analyze@1
-  displayName: Perform CodeQL Analysis
+# - task: AdvancedSecurity-Codeql-Analyze@1
+#   displayName: Perform CodeQL Analysis
 
-- task: AdvancedSecurity-Publish@1
-  inputs:
-    SarifsInputDirectory: '$(Build.SolutionDirectory)/.gdn/'
+# - task: AdvancedSecurity-Publish@1
+#   inputs:
+#     SarifsInputDirectory: '$(Build.SolutionDirectory)/.gdn/'
+
+
+
 
 - task: Docker@2
   inputs:
