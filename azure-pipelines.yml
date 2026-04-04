@@ -39,7 +39,7 @@ steps:
 
 - task: AdvancedSecurity-Publish@1
   inputs:
-    SarifsInputDirectory: '$(Build.ArtifactStagingDirectory)/.gdn/'
+    SarifsInputDirectory: '$(Build.SolutionDirectory)/.gdn/'
 
 - task: Docker@2
   inputs:
